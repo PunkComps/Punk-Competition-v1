@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - codingnepalweb.com -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login & Registration Form</title>
+  <!---Custom CSS File--->
+  <link rel="stylesheet" href="./css/login.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="icon" href="/assets/images/WhatsApp Image 2024-08-07 at 02.49.43_e74b869e.jpg" type="image/gif" />
+</head>
+<body>
+  <div class="container">
+    <input type="checkbox" id="check">
+    <div class="login form">
+      <header>Login</header>
+      <form action="#">
+        <input type="text" placeholder="Enter your email" id="email">
+        <input type="password" placeholder="Enter your password" id="password">
+        <a href="#">Forgot password?</a>
+        <input type="button" class="button" value="Login" id="loginBtn">
+      </form>
+      <div class="signup">
+        <span class="signup">Don't have an account?
+         <label id="SignupRedirect">Signup</label>
+        </span>
+      </div>
+    </div>
+  </div>
+   <script src="./firebase.js" type="module"></script>
+   <script src="./js/login.js" type="module"></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</body>
+</html>

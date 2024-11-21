@@ -1,0 +1,91 @@
+:root {
+    --primary-color: #DB090A;
+    --sec-color: #737174;
+    --third-color: rgb(17, 16, 16);
+    --white-color: #fff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --hover-shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--sec-color);
+}
+
+.contact_section {
+    padding: 50px 20px;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px var(--shadow-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact_taital {
+    color: var(--primary-color);
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.email_text {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.email-bt, .massage-bt {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid var(--primary-color);
+    border-radius: 5px;
+    background-color: var(--white-color);
+    font-size: 16px;
+    color: var(--third-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.email-bt::placeholder, .massage-bt::placeholder {
+    color: var(--sec-color);
+}
+
+.email-bt:hover, .massage-bt:hover {
+    box-shadow: 0px 6px 15px var(--hover-shadow-color);
+    transform: translateY(-2px);
+}
+
+.email-bt:focus, .massage-bt:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0px 6px 15px var(--hover-shadow-color);
+    transform: translateY(-2px);
+}
+
+.massage-bt {
+    resize: none;
+}
+
+.send_btn a {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 15px 30px;
+    text-align: center;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.send_btn a:hover {
+    background-color: var(--sec-color);
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}

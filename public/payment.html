@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout</title>
+  <link rel="stylesheet" href="./css/payment.css">
+  <link rel="stylesheet" href="./css/loader.css">
+  <link rel="icon" href="/assets/images/WhatsApp Image 2024-08-07 at 02.49.43_e74b869e.jpg" type="image/gif" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+</head>
+
+<body>
+  <div class="loader-div" id="MainLoader">
+    <span class="loader"></span>
+  </div>
+  <div id="mainContentWrapper">
+    <div id="error-empty" class="error-empty">
+      <p>You already purchased a ticket please again click a card</p>
+    </div>
+    <div id="main-checkout-container" class="main-checkout-container">
+      <div id="checkout-container">
+        <h1 id="product-title"></h1>
+        <p id="product-description"></p>
+        <img id="product-image" src="" alt="Product Image" />
+        <p>Amount: <span id="product-amount"></span> GBP</p>
+        <form id="payment-form">
+          <div id="card-element"></div>
+          <button type="submit" id="submit-button">Pay Now</button>
+        </form>
+        <div id="payment-result"></div>
+      </div>
+    </div>
+    <div id="paymentModal" class="custom-modal">
+      <div class="custom-modal-content">
+        <h2>Enter Ticket Details</h2>
+        <form id="ticketForm">
+          <div class="form-group">
+            <label for="ticket-number">Ticket Number</label>
+            <input type="text" id="ticket-number" placeholder="Enter ticket number" required>
+          </div>
+          <div class="form-group">
+            <label for="question-answer">Answer to Security Question</label>
+            <input type="text" id="question-answer" placeholder="Enter your answer" required>
+          </div>
+          <button type="button" id="submit-details" class="submit-button">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="./js/payment.js" type="module"></script>
+  <script type="module" src="./firebase.js"></script>
+</body>
+
+</html>
