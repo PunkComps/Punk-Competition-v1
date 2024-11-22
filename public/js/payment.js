@@ -1,8 +1,9 @@
-import { db, collection, addDoc, serverTimestamp, doc, updateDoc, onAuthStateChanged, getDocs, auth } from "../firebase.js";
+import { db, collection, addDoc, serverTimestamp, doc, updateDoc, onAuthStateChanged, getDocs, auth, getDoc } from "../firebase.js";
 
 // Retrieve stored data from localStorage
 const storedData = JSON.parse(localStorage.getItem('payId'));
-const { Title, Description, Amount, Image, Ticket , Question} = storedData;
+let detailId = localStorage.getItem('cardId')
+const { Title, Description, Amount, Image, Ticket, Question } = storedData;
 console.log(Ticket);
 let paymentModal = document.getElementById('paymentModal');
 let emptyError = document.getElementById('error-empty')
@@ -12,7 +13,7 @@ window.onload = function () {
     let mainContentWrapper = document.getElementById("mainContentWrapper");
     MainLoader.style.display = "none"; // Hide loader
     mainContentWrapper.style.display = "block"; // Show content
-  };
+};
 if (storedData === '') {
     checkOutContainer.style.display = 'none';
     emptyError.style.display = 'flex';
@@ -71,12 +72,8 @@ form.addEventListener('submit', StripeFunction);
 let modalSubmit = document.getElementById('submit-details');
 const modalSubmitFuntion = async (event) => {
     event.preventDefault();
-    
     const userTicket = document.getElementById('ticket-number').value;
     const userAnswer = document.getElementById('question-answer').value;
-    let UserId = localStorage.getItem('cardId');
-
-    // Validation for empty input fields
     if (userTicket.trim() === "" || userAnswer.trim() === "") {
         Toastify({
             text: 'Both input fields are required, and ticket must be written perfectly.',
@@ -85,56 +82,65 @@ const modalSubmitFuntion = async (event) => {
             position: 'left',
             style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
         }).showToast();
-        return;  // Stop further execution if inputs are empty
-    }
-
-    // Validate ticket number and answer from localStorage
-    let filterNumber = Ticket.includes(userTicket);
-    if (filterNumber && userAnswer) {
-        let ticketArray = Ticket.split(',').map(item => item.trim());
-        ticketArray = ticketArray.filter(item => item !== userTicket);  // Remove specific ticket
-
-        let updatedTicketString = ticketArray.join(', ');
-        const washingtonRef = doc(db, "post", UserId);
-        console.log(washingtonRef);
-
-        await updateDoc(washingtonRef, {
-            Ticket: updatedTicketString
-        });
-        Toastify({
-            text: 'Ticket verified! Withdrawal details will be live soon.',
-            duration: 3000,
-            gravity: 'top',
-            position: 'left',
-            style: { background: 'linear-gradient(to right, #00b09b, #96c93d)' }
-        }).showToast();
-        // Close modal and redirect to withdrawal details page
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                const loggedInEmail = user.email;
-                console.log("User is logged in with Email:", loggedInEmail);
-                AllUserDataShow(loggedInEmail, userTicket, userAnswer);
-            } else {
-                console.log("No user is currently logged in");
-                // Error message
-                Toastify({
-                    text: 'No user is currently logged in, please get in touch.',
-                    duration: 3000,
-                    gravity: 'top',
-                    position: 'left',
-                    style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
-                }).showToast();
-            }
-        });
+        return;
     } else {
-        // Error message if ticket is invalid or answer is wrong
-        Toastify({
-            text: 'Invalid ticket number or wrong answer.',
-            duration: 3000,
-            gravity: 'top',
-            position: 'left',
-            style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
-        }).showToast();
+        try {
+            const docRef = doc(db, "post", detailId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const { Title, Description, Question, Amount, Ticket, Image } = docSnap.data();
+                console.log(Ticket);
+                let filterNumber = Ticket.includes(userTicket);
+                if (filterNumber && userAnswer) {
+                    let ticketArray = Ticket.split(',').map(item => item.trim());
+                    ticketArray = ticketArray.filter(item => item !== userTicket);
+                    let updatedTicketString = ticketArray.join(', ');
+
+                    const washingtonRef = doc(db, "post", detailId);
+                    console.log(washingtonRef);
+            
+                    await updateDoc(washingtonRef, {
+                        Ticket: updatedTicketString
+                    });
+
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            const loggedInEmail = user.email;
+                            console.log("User is logged in with Email:", loggedInEmail);
+                            Toastify({
+                                text: 'Ticket verified! Withdrawal details will be live soon.',
+                                duration: 3000,
+                                gravity: 'top',
+                                position: 'left',
+                                style: { background: 'linear-gradient(to right, #00b09b, #96c93d)' }
+                            }).showToast();
+                            AllUserDataShow(loggedInEmail, userTicket, userAnswer);
+                        } else {
+                            console.log("No user is currently logged in");
+                            // Error message
+                            Toastify({
+                                text: 'No user is currently logged in, please get in touch.',
+                                duration: 3000,
+                                gravity: 'top',
+                                position: 'left',
+                                style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
+                            }).showToast();
+                        }
+                    });
+                } else {
+                    // Error message if ticket is invalid or answer is wrong
+                    Toastify({
+                        text: 'Invalid ticket number or wrong answer.',
+                        duration: 3000,
+                        gravity: 'top',
+                        position: 'left',
+                        style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
+                    }).showToast();
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 
@@ -142,23 +148,30 @@ modalSubmit.addEventListener('click', modalSubmitFuntion);
 
 
 
-const AllUserDataShow = async (loggedInEmail, userTicket, userAnswer) => {
+const AllUserDataShow = async (loggedInEmail , userTicket, userAnswer) => {
     try {
         const querySnapshot = await getDocs(collection(db, "userData"));
+        console.log("All Documents:", querySnapshot.docs.map(doc => doc.data()));
+        const normalizedEmail = loggedInEmail.trim().toLowerCase();
 
-        const matchedUser = querySnapshot.docs.find((doc) => {
-            const { email } = doc.data();
-            return email === loggedInEmail;
+        // Search for the matching user
+        let matchedUser = null;
+        querySnapshot.forEach((doc) => {
+            const AllEmailData = doc.data();
+            const firestoreEmail = AllEmailData.email.trim().toLowerCase();
+            if (firestoreEmail === normalizedEmail) {
+                matchedUser = AllEmailData;
+            }
         });
 
         if (matchedUser) {
-            const userData = matchedUser.data();
-            addPurchaseData(userData, userTicket, userAnswer)
+            console.log("Matched User Data:", matchedUser);
 
+            // Pass matched user data to the function
+            addPurchaseData(matchedUser, userTicket, userAnswer);
         } else {
             console.log("No matching user found with this email.");
         }
-
     } catch (error) {
         console.log("Error fetching data:", error);
     }
@@ -188,7 +201,7 @@ const addPurchaseData = async (userData, userTicket, userAnswer) => {
         localStorage.setItem('payId', JSON.stringify(""));
         paymentModal.style.display = 'none';
         checkOutContainer.style.display = 'none';
-        setTimeout(()=>(window.location.href = "/public/index.html"), 3000)
+        setTimeout(() => (window.location.href = "/public/index.html"), 3000)
     } catch (e) {
         console.error("Error adding document: ", e);
     }
