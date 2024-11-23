@@ -4,10 +4,11 @@ import { db, collection, addDoc, serverTimestamp, doc, updateDoc, onAuthStateCha
 const storedData = JSON.parse(localStorage.getItem('payId'));
 let detailId = localStorage.getItem('cardId')
 const { Title, Description, Amount, Image, Ticket, Question } = storedData;
-console.log(Ticket);
 let paymentModal = document.getElementById('paymentModal');
 let emptyError = document.getElementById('error-empty')
+let ticketDiv = document.getElementById('ticketDiv');
 let checkOutContainer = document.getElementById('main-checkout-container');
+let payButton = document.getElementById('submit-button');
 window.onload = function () {
     let MainLoader = document.getElementById("MainLoader");
     let mainContentWrapper = document.getElementById("mainContentWrapper");
@@ -18,6 +19,12 @@ if (storedData === '') {
     checkOutContainer.style.display = 'none';
     emptyError.style.display = 'flex';
 }
+
+let ticketArray = Ticket.split(',').map(item => item.trim());
+    ticketArray.map((item) => {
+      console.log(`============> get ticket ${item}`);
+      ticketDiv.innerHTML += `<div class="ticket-box">${item}</div>`
+});
 
 // Populate checkout page with product info
 document.getElementById('product-title').textContent = Title;
@@ -36,6 +43,8 @@ const form = document.getElementById('payment-form');
 
 const StripeFunction = async (event) => {
     event.preventDefault(); // Form reload hone se rokain
+    payButton.disabled = true;
+    payButton.textContent = "Processing...";
     try {
         // Backend se client secret fetch karen
         const response = await fetch('/api/server', {
@@ -60,17 +69,25 @@ const StripeFunction = async (event) => {
         } else {
             document.getElementById('payment-result').textContent = 'Payment successful!';
             paymentModal.style.display = 'flex'; // Successful payment ke baad modal show karain
+            payButton.disabled = false;
+            payButton.textContent = "Pay";
         }
     } catch (err) {
         document.getElementById('payment-result').textContent = `Error: ${err.message}`;
+        payButton.disabled = false;
+        payButton.textContent = "Pay";
+    } finally {
+        payButton.disabled = false;
+        payButton.textContent = "Pay";
     }
 };
 
 form.addEventListener('submit', StripeFunction);
-
 // Ticket number and answer validation in modal
 let modalSubmit = document.getElementById('submit-details');
 const modalSubmitFuntion = async (event) => {
+    modalSubmit.disabled = true;
+    modalSubmit.textContent = "Submitting...";
     event.preventDefault();
     const userTicket = document.getElementById('ticket-number').value;
     const userAnswer = document.getElementById('question-answer').value;
@@ -82,6 +99,8 @@ const modalSubmitFuntion = async (event) => {
             position: 'left',
             style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
         }).showToast();
+        modalSubmit.disabled = false;
+        modalSubmit.textContent = "Submit";
         return;
     } else {
         try {
@@ -125,6 +144,8 @@ const modalSubmitFuntion = async (event) => {
                                 position: 'left',
                                 style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
                             }).showToast();
+                            modalSubmit.disabled = false;
+                            modalSubmit.textContent = "Submit";
                         }
                     });
                 } else {
@@ -136,10 +157,21 @@ const modalSubmitFuntion = async (event) => {
                         position: 'left',
                         style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
                     }).showToast();
+                    modalSubmit.disabled = false;
+                    modalSubmit.textContent = "Submit";
                 }
             }
         } catch (error) {
+            Toastify({
+                text: `Opp's ${error}`,
+                duration: 3000,
+                gravity: 'top',
+                position: 'left',
+                style: { background: 'linear-gradient(to right, #ff5f6d, #ffc371)' }
+            }).showToast();
             console.log(error);
+            modalSubmit.disabled = false;
+            modalSubmit.textContent = "Submit";
         }
     }
 }
@@ -201,8 +233,12 @@ const addPurchaseData = async (userData, userTicket, userAnswer) => {
         localStorage.setItem('payId', JSON.stringify(""));
         paymentModal.style.display = 'none';
         checkOutContainer.style.display = 'none';
+        modalSubmit.disabled = false;
+        modalSubmit.textContent = "Submit";
         setTimeout(() => (window.location.href = "/public/index.html"), 3000)
     } catch (e) {
         console.error("Error adding document: ", e);
+        modalSubmit.disabled = false;
+        modalSubmit.textContent = "Submit";
     }
 }
