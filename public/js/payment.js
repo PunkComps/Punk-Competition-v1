@@ -33,7 +33,7 @@ document.getElementById('product-amount').textContent = Amount;
 document.getElementById('product-image').src = Image;
 
 // Initialize Stripe
-const stripe = Stripe('pk_test_51PuvL8HG1xPdW1Cj3K1BBZhMzK7I11MAubppNwJ8GdFEmLYlrgoOEOuvPi1XApamKLopBsFMWInllCvxnRIqgtP100Lz9oj4N7');
+const stripe = Stripe('pk_live_51PuvL8HG1xPdW1CjfvWpL8lcdbBI6XCkTz2BTt2XGtHNRYHA5KwePTzbP8Y7Sfn3ZXMq5tiiPrwNNMOZdajkFmT500lMnHOoJ9');
 const elements = stripe.elements();
 const cardElement = elements.create('card');
 cardElement.mount('#card-element');
