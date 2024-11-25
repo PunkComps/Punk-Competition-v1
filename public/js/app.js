@@ -47,7 +47,7 @@ const allCompetitionPost = async () => {
               ? Description.slice(0, 100) + "..."
               : Description
           }</p>
-          <button class="card-title">$${Amount}</button>
+          <button class="card-title">£${Amount}</button>
         </div>
       </div>`;
       console.log(doc.id, " ===> ", doc.data());
