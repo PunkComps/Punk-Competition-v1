@@ -61,48 +61,52 @@ const DetailPostView = async () => {
     </div>`;
    
   // Add event listener for the button
-  document.querySelector('#getValueButton').addEventListener('click', () => {
+  let submitBtn = document.querySelector('#getValueButton');
+  submitBtn.addEventListener('click', () => {
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        const uid = user.uid;
-        console.log(`onAuthStateChange=====> ${user} =======> ${uid}`);
+        console.log("No user logged in");
         Swal.fire({
           position: "top-center",
           icon: "error",
-          title: "please first login and signup",
+          title: "Please login or signup first!",
           showConfirmButton: false,
           timer: 1500,
         });
-        return;
+      } else {
+        const uid = user.uid; // Yeh tabhi chalega jab user exist karega
+        console.log(`User UID: ${uid}`);
+        
+        const selectedValue = document.querySelector('#options').value; // Get the selected value
+        console.log(`Selected Value: ${selectedValue}`);
+        
+        if (selectedValue === Answer) {
+          Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title: "Congratulations!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          console.log("Correct Answer! Redirecting to the payment page...");
+          const dataToStore = { Title, Description, Question, Amount, Ticket, Image };
+          localStorage.setItem('payId', JSON.stringify(dataToStore));
+          window.location.href = '/public/payment.html'; 
+        } else {
+          Swal.fire({
+            position: "top-center",
+            icon: "error",
+            title: "Incorrect Answer. Please try again!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          console.log("Incorrect Answer. Please retry.");
+        }
       }
-
-      
     });
-    const selectedValue = document.querySelector('#options').value; // Get the selected value
-    console.log(`Selected Value: ${selectedValue}`);
-    if (selectedValue === Answer) {
-      Swal.fire({
-        position: "top-center",
-        icon: "success",
-        title: "congratulation!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      console.log("Correct Answer! Redirecting to the payment page...");
-      const dataToStore = { Title, Description, Question, Amount, Ticket, Image };
-      localStorage.setItem('payId', JSON.stringify(dataToStore));
-      window.location.href = '/public/payment.html' 
-    } else {
-      Swal.fire({
-        position: "top-center",
-        icon: "error",
-        title: "Incorrect Answer. Please try again!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      console.log("Incorrect Answer. Please retry.");
-    }
   });
+  
+
   
     let ticketArray = Ticket.split(',').map(item => item.trim());
     ticketArray.map((item) => {
@@ -148,9 +152,12 @@ signupBtn.addEventListener('click', SignupRedirect)
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const uid = user.uid;
-      console.log(`onAuthStateChange=====> ${user} =======> ${uid}`);
+      console.log(`onAuthStateChange=====> ${user}`);
       buttonDiv.style.display = "none"
+    }
+    else{
+      let submitBtn = document.getElementById("getValueButton");
+      submitBtn.disable = false
     }
   });
 

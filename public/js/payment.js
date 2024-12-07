@@ -9,13 +9,12 @@ let emptyError = document.getElementById('error-empty')
 let ticketDiv = document.getElementById('ticketDiv');
 let checkOutContainer = document.getElementById('main-checkout-container');
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const uid = user.uid;
-      console.log(`onAuthStateChange=====> ${user} =======> ${uid}`);
-     window.location.href =  '/public/postDetail.html'
+onAuthStateChanged(auth , (user)=>{
+    if (!user) {
+        window.location.href = "/public/index.html"
     }
-  });
+})
+
 
 window.onload = function () {
     let MainLoader = document.getElementById("MainLoader");
@@ -43,7 +42,6 @@ document.getElementById('product-image').src = Image;
 // Handle form submission for Nochex
 const form = document.getElementById('payment-form');
 const payButton = document.getElementById('submit-button');
-
 const NochexFunction = (event) => {
     event.preventDefault(); // Form reload hone se rokain
     payButton.disabled = true;
