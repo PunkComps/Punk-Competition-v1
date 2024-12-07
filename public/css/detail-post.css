@@ -222,3 +222,61 @@
     font-size: 1rem;
   }
 }
+:root {
+  --primary-color: #DB090A;
+  --sec-color: #737174;
+  --third-color: rgb(17, 16, 16);
+  --white-color: #fff;
+}
+
+#options {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  color: var(--third-color);
+  background-color: var(--white-color);
+  border: 2px solid var(--sec-color);
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+#options:hover {
+  border-color: var(--primary-color);
+}
+
+#options:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px var(--primary-color);
+}
+
+#options option {
+  color: var(--third-color);
+  background-color: var(--white-color);
+}
+
+#getValueButton {
+  width: 100%;
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--white-color);
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+#getValueButton:hover {
+  background-color: var(--sec-color);
+  color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+#getValueButton:active {
+  transform: scale(1);
+}

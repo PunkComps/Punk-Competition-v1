@@ -8,7 +8,7 @@ let paymentModal = document.getElementById('paymentModal');
 let emptyError = document.getElementById('error-empty')
 let ticketDiv = document.getElementById('ticketDiv');
 let checkOutContainer = document.getElementById('main-checkout-container');
-let payButton = document.getElementById('submit-button');
+
 window.onload = function () {
     let MainLoader = document.getElementById("MainLoader");
     let mainContentWrapper = document.getElementById("mainContentWrapper");
@@ -26,63 +26,51 @@ let ticketArray = Ticket.split(',').map(item => item.trim());
       ticketDiv.innerHTML += `<div class="ticket-box">${item}</div>`
 });
 
-// Populate checkout page with product info
+/// Populate checkout page with product info
 document.getElementById('product-title').textContent = Title;
 document.getElementById('product-description').textContent = Description;
 document.getElementById('product-amount').textContent = Amount;
 document.getElementById('product-image').src = Image;
 
-// Initialize Stripe
-const stripe = Stripe('pk_live_51PuvL8HG1xPdW1CjfvWpL8lcdbBI6XCkTz2BTt2XGtHNRYHA5KwePTzbP8Y7Sfn3ZXMq5tiiPrwNNMOZdajkFmT500lMnHOoJ9');
-const elements = stripe.elements();
-const cardElement = elements.create('card');
-cardElement.mount('#card-element');
-
-// Handle form submission
+// Handle form submission for Nochex
 const form = document.getElementById('payment-form');
+const payButton = document.getElementById('submit-button');
 
-const StripeFunction = async (event) => {
+const NochexFunction = (event) => {
     event.preventDefault(); // Form reload hone se rokain
     payButton.disabled = true;
     payButton.textContent = "Processing...";
+
     try {
-        // Backend se client secret fetch karen
-        const response = await fetch('/api/server', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ Title, Description, Amount, Image }),  // Product data backend ko send karen
-        });
+        // Create a form dynamically for Nochex
+        const nochexForm = document.createElement('form');
+        nochexForm.action = "https://secure.nochex.com/";
+        nochexForm.method = "POST";
+        nochexForm.style.display = "none";
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch client secret');
-        }
+        // Add required fields
+        nochexForm.innerHTML = `
+            <input type="hidden" name="merchant_id" value="your_nochex_merchant_id" />
+            <input type="hidden" name="amount" value="${Amount}" />
+            <input type="hidden" name="order_id" value="12345" />
+            <input type="hidden" name="description" value="${Title}: ${Description}" />
+            <input type="hidden" name="success_url" value="https://yourwebsite.com/success" />
+            <input type="hidden" name="cancel_url" value="https://yourwebsite.com/cancel" />
+            <input type="hidden" name="billing_fullname" value="Customer Name" />
+            <input type="hidden" name="email_address" value="customer@example.com" />
+        `;
 
-        const { clientSecret } = await response.json();
-
-        // Stripe ke sath payment confirm karen
-        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: { card: cardElement },
-        });
-
-        if (error) {
-            throw new Error(`Payment failed: ${error.message}`);
-        } else {
-            document.getElementById('payment-result').textContent = 'Payment successful!';
-            paymentModal.style.display = 'flex'; // Successful payment ke baad modal show karain
-            payButton.disabled = false;
-            payButton.textContent = "Pay";
-        }
+        // Append the form to the body and submit it
+        document.body.appendChild(nochexForm);
+        nochexForm.submit();
     } catch (err) {
         document.getElementById('payment-result').textContent = `Error: ${err.message}`;
-        payButton.disabled = false;
-        payButton.textContent = "Pay";
-    } finally {
         payButton.disabled = false;
         payButton.textContent = "Pay";
     }
 };
 
-form.addEventListener('submit', StripeFunction);
+form.addEventListener('submit', NochexFunction);
 // Ticket number and answer validation in modal
 let modalSubmit = document.getElementById('submit-details');
 const modalSubmitFuntion = async (event) => {
