@@ -9,6 +9,14 @@ let emptyError = document.getElementById('error-empty')
 let ticketDiv = document.getElementById('ticketDiv');
 let checkOutContainer = document.getElementById('main-checkout-container');
 
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const uid = user.uid;
+      console.log(`onAuthStateChange=====> ${user} =======> ${uid}`);
+     window.location.href =  '/public/postDetail.html'
+    }
+  });
+
 window.onload = function () {
     let MainLoader = document.getElementById("MainLoader");
     let mainContentWrapper = document.getElementById("mainContentWrapper");

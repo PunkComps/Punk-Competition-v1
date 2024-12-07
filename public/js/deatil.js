@@ -83,7 +83,7 @@ const DetailPostView = async () => {
     if (selectedValue === Answer) {
       Swal.fire({
         position: "top-center",
-        icon: "error",
+        icon: "success",
         title: "congratulation!",
         showConfirmButton: false,
         timer: 1500,
