@@ -19,7 +19,7 @@
       <form action="#">
         <input type="text" placeholder="Enter your email" id="email">
         <input type="password" placeholder="Enter your password" id="password">
-        <a href="#">Forgot password?</a>
+        <a href="#"id="forgetPassword">Forgot Password</a>
         <input type="button" class="button" value="Login" id="loginBtn">
       </form>
       <div class="signup">
@@ -29,6 +29,16 @@
       </div>
     </div>
   </div>
+  <div id="forgotPasswordModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="close-button">&times;</span>
+      <h2>Forgot Password</h2>
+      <p>Enter your email address below to reset your password:</p>
+      <input type="email" id="emailInput" placeholder="Enter your email" required />
+      <button id="sendEmailButton">Send Reset Link</button>
+    </div>
+  </div>
+
    <script src="./firebase.js" type="module"></script>
    <script src="./js/login.js" type="module"></script>
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

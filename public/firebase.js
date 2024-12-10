@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getFirestore, collection, addDoc , getDocs , doc, getDoc , setDoc , deleteDoc , updateDoc , arrayRemove , Timestamp , serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
-import { getAuth , createUserWithEmailAndPassword , signInWithEmailAndPassword , onAuthStateChanged , signOut} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { getAuth , createUserWithEmailAndPassword , signInWithEmailAndPassword , onAuthStateChanged , signOut , sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -22,4 +22,4 @@ const storage = getStorage(app);
 const auth = getAuth(app);
 
 // Export necessary Firebase services
-export { db, collection, addDoc, getDocs, doc, getDoc, setDoc, storage, ref, uploadBytes, getDownloadURL, uploadBytesResumable, deleteDoc, auth , createUserWithEmailAndPassword , signInWithEmailAndPassword , onAuthStateChanged , signOut , updateDoc , arrayRemove , Timestamp , serverTimestamp };
+export { db, collection, addDoc, getDocs, doc, getDoc, setDoc, storage, ref, uploadBytes, getDownloadURL, uploadBytesResumable, deleteDoc, auth , createUserWithEmailAndPassword , signInWithEmailAndPassword , onAuthStateChanged , signOut , updateDoc , arrayRemove , Timestamp , serverTimestamp , sendPasswordResetEmail };
